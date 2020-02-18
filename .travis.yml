@@ -14,3 +14,7 @@ before_install:
 install:
   - sudo apt-get install python3
   - pip3 install pandas numpy matplotlib
+
+# Run python scripts
+script:
+  python3 planner.py
