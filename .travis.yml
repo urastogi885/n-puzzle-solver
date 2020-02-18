@@ -7,8 +7,12 @@ language: python
 # Set the python version to 3.5
 python: 3.5
 
+before-install:
+  - sudo apt-get update
+
 # Install the library dependcies
 install:
+  - sudo apt-get install python3
   - pip3 install pandas numpy matplotlib
 
 # Run various python files in the project
