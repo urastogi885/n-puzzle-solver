@@ -1,5 +1,4 @@
 import ast
-import random
 import puzzle as pzl
 from sys import argv
 
@@ -12,9 +11,13 @@ if __name__ == '__main__':
     # Convert goal into matrix
     goal_matrix = pzl.convert_into_matrix(goal_list)
     # Get start config and convert it into a matrix
-    start_list = ast.literal_eval(start_config)
-    puzzle = pzl.Puzzle(start_list)
+    start_node = ast.literal_eval(start_config)
+    puzzle = pzl.Puzzle(start_node, goal_matrix)
     # Print the start config
-    print(puzzle.puzzle)
-    # Check solvability of start config and print it
-    print('Puzzle is', 'Solvable' if puzzle.check_solvability() else 'Not Solvable')
+    print('Initial node:\n', puzzle.initial_puzzle)
+    print('Goal node:\n', puzzle.goal)
+    # Check solvability of the initial node given by the user
+    if not puzzle.check_solvability():
+        print('UNSOLVABLE CONFIG GIVEN')
+    else:
+        print('Final weight for the node:', puzzle.get_final_weight(puzzle.initial_puzzle, 0))
