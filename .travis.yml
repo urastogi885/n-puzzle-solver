@@ -7,14 +7,15 @@ language: python
 # Set the python version to 3.5
 python: 3.5
 
+# Get updates before install
 before_install:
   - sudo apt-get update
 
-# Install the library dependcies
+# Install the library dependencies
 install:
   - sudo apt-get install python3
-  - pip3 install pandas numpy matplotlib
+  - pip3 install numpy
 
 # Run python scripts
 script:
-  python3 planner.py
+  python3 main.py 7,5,4,0,3,2,8,1,6
