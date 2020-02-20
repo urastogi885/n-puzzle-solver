@@ -33,15 +33,19 @@ class Puzzle:
         inversions = 0
         # Iterate through the start node to determine no. of inversions needed
         for i in range(len(self.puzzle_list) - 1):
+            # Check for incorrect elements in the start node
+            if self.puzzle_list[i] not in self.goal:
+                print('Incorrect elements in the start node')
+                return False
             for j in range(i + 1, len(self.puzzle_list)):
                 # Ignore 0 while calculating inversions
                 if self.puzzle_list[j] and self.puzzle_list[i] and self.puzzle_list[j] > self.puzzle_list[i]:
                     inversions += 1
         # If no. of inversions are even, puzzle is solvable
-        if inversions % 2 == 0:
-            return True
+        if inversions % 2 != 0:
+            return False
 
-        return False
+        return True
 
     def get_heuristic_value(self, puzzle_node):
         """

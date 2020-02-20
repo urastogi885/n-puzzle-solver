@@ -2,6 +2,8 @@ import ast
 import puzzle as pzl
 from sys import argv
 
+# Define arguments to run the code
+# start_config: start node for the puzzle
 script, start_config = argv
 
 
@@ -12,6 +14,11 @@ if __name__ == '__main__':
     goal_matrix = pzl.convert_into_matrix(goal_list)
     # Get start config and convert it into a matrix
     start_node = ast.literal_eval(start_config)
+    # Check if correct no. of elements have been given for the puzzle
+    if len(start_node) != 9:
+        print('You entered', len(start_node), 'elements for the puzzle!')
+        print('Please enter exactly 9 elements each separated by a comma')
+        quit()
     puzzle = pzl.Puzzle(start_node, goal_matrix)
     # Print the start config
     print('Initial node:\n', puzzle.initial_puzzle)
