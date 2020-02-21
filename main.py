@@ -52,6 +52,7 @@ def generate_path(game):
         for node in game.closed_nodes:
             if np.array_equal(node.arr, closed_node.parent_node):
                 # Append parent node
+                print('Weight:', closed_node.weight, closed_node.level)
                 path_list.append(closed_node.parent_node)
                 # Update node to search for next parent
                 closed_node = node
@@ -104,7 +105,9 @@ if __name__ == '__main__':
                 # Append child node to the list of open nodes
                 # Do no append child node if repeated
                 if not node_repeated:
+                    # Update final weight of the child node
                     child_node.weight = puzzle.get_final_weight(child_node.arr, child_node.level)
+                    # print('Node Weight:', child_node.weight)
                     puzzle.open_nodes.append(child_node)
             # Sort the open nodes using their weights
             puzzle.open_nodes.sort(key=lambda x: x.weight, reverse=False)
