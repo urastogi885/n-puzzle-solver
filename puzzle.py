@@ -11,16 +11,16 @@ def convert_into_matrix(convert_list):
 
 
 class Puzzle:
-    def __init__(self, puzzle_list, goal_matrix):
+    def __init__(self, initial_list, goal_node):
         """
         Initialize the puzzle with a start node and final goal node
-        :param puzzle_list: start node provided by the user
-        :param goal_matrix: the pre-decided goal node
+        :param initial_list: start node provided by the user
+        :param goal_node: the pre-decided goal node
         """
         # Store puzzle and goal nodes as class members
-        self.puzzle_list = puzzle_list
-        self.initial_puzzle = convert_into_matrix(self.puzzle_list)
-        self.goal = goal_matrix
+        self.initial_list = initial_list
+        self.initial_node = convert_into_matrix(self.initial_list)
+        self.goal_node = goal_node
         # Define empty lists to store open and closed nodes
         self.open_nodes = []
         self.closed_nodes = []
@@ -32,14 +32,14 @@ class Puzzle:
         """
         inversions = 0
         # Iterate through the start node to determine no. of inversions needed
-        for i in range(len(self.puzzle_list) - 1):
+        for i in range(len(self.initial_list) - 1):
             # Check for incorrect elements in the start node
-            if self.puzzle_list[i] not in self.goal:
+            if self.initial_list[i] not in self.goal_node:
                 print('Incorrect elements in the start node')
                 return False
-            for j in range(i + 1, len(self.puzzle_list)):
+            for j in range(i + 1, len(self.initial_list)):
                 # Ignore 0 while calculating inversions
-                if self.puzzle_list[j] and self.puzzle_list[i] and self.puzzle_list[j] > self.puzzle_list[i]:
+                if self.initial_list[j] and self.initial_list[i] and self.initial_list[j] > self.initial_list[i]:
                     inversions += 1
         # If no. of inversions are even, puzzle is solvable
         if inversions % 2 != 0:
@@ -47,32 +47,32 @@ class Puzzle:
 
         return True
 
-    def get_heuristic_value(self, puzzle_node):
+    def get_heuristic_value(self, node):
         """
         Implement heuristic function for a-star by calculating manhattan distance
-        :param: puzzle_node: current puzzle node under consideration
+        :param: node: current puzzle node under consideration
         :return: manhattan distance
         """
         manhattan_distance = 0
 
-        for x in np.nditer(self.goal):
+        for x in np.nditer(self.goal_node):
             # Do not evaluate manhattan distance for 0
             if x != 0:
                 # Get location of the element in goal and current nodes
-                x_index_puzzle = np.where(puzzle_node == x)
-                x_index_goal = np.where(self.goal == x)
+                x_index_puzzle = np.where(node == x)
+                x_index_goal = np.where(self.goal_node == x)
                 # Accumulate the manhattan distance
                 manhattan_distance += (abs(x_index_puzzle[0][0] - x_index_goal[0][0]) +
                                        abs(x_index_puzzle[1][0] - x_index_goal[1][0]))
 
         return manhattan_distance
 
-    def get_final_weight(self, puzzle_node, node_level):
+    def get_final_weight(self, node, node_level):
         """
         Get final weight for a-star
-        :param puzzle_node: current puzzle node under consideration
+        :param node: current node under consideration
         :param node_level: level of puzzle node
         :return: final weight for a-star
         """
         # Add heuristic value and node level to get the final weight for the current node
-        return self.get_heuristic_value(puzzle_node) + node_level
+        return self.get_heuristic_value(node) + node_level
