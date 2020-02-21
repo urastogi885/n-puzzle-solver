@@ -38,9 +38,9 @@ class Node:
         for i in range(len(actions)):
             child = self.get_child(self.arr, x, y, actions[i][0], actions[i][1])
             # Check if child node is generated
-            if child is not None and not np.array_equal(child, self.arr):
+            if child is not None and not np.array_equal(child, self.parent_node):
                 # Define all the properties of the child node and append to the child nodes' list
-                child_node = Node(child, self.level + 1, 0, self.index + i + 1, self.index, self.arr)
+                child_node = Node(child, 0, self.level + 1, self.index + i + 1, self.index, self.arr)
                 child_nodes.append(child_node)
 
         return child_nodes

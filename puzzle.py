@@ -61,7 +61,7 @@ class Puzzle:
 
         return True
 
-    def get_heuristic_value(self, node):
+    def get_heuristic_score(self, node):
         """
         Implement heuristic function for a-star by calculating manhattan distance
         :param: node: current puzzle node under consideration
@@ -89,9 +89,9 @@ class Puzzle:
     def get_final_weight(self, node, node_level):
         """
         Get final weight for a-star
-        :param node: current node under consideration
+        :param node: 3x3 array of the node
         :param node_level: level of puzzle node
         :return: final weight for a-star
         """
         # Add heuristic value and node level to get the final weight for the current node
-        return self.get_heuristic_value(node) + node_level
+        return self.get_heuristic_score(node) + node_level
