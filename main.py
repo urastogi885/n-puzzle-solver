@@ -28,35 +28,40 @@ if __name__ == '__main__':
     if not puzzle.check_solvability():
         print('UNSOLVABLE CONFIG PROVIDED')
     else:
-        print('\n\nSolving...\n\n')
-        start_node = Node(puzzle.initial_node, puzzle.get_final_weight(puzzle.initial_node, 0), 0, 0, -1)
+        print('\n\nSolving...')
+        start_node = Node(puzzle.initial_node, puzzle.get_final_weight(puzzle.initial_node, 0), 0, 0, -1, 0)
         puzzle.open_nodes.append(start_node)
         # Open various files
         node_path = open('output_files/nodePath.txt', 'w+')
-        nodes = open('output_files/Nodes.txt', 'w+')
+        nodes = open('output_files/Nodes.txt', 'w+').close()
         nodes_info = open('output_files/NodesInfo.txt', 'w+')
         while True:
             # Get current node
             current_node = puzzle.open_nodes[0]
             # Add current node to node path
             node_path.write(pzl.convert_array2str(current_node.node))
+            nodes = open('output_files/Nodes.txt', 'w')
+            for node in puzzle.open_nodes:
+                nodes.write(pzl.convert_array2str(node.node))
+                nodes_info.write(str(node.index) + ' ' + str(node.parent_index) + ' 0\n')
+            nodes.close()
+            nodes = open('output_files/Nodes.txt', 'r')
             if puzzle.get_heuristic_value(current_node.node) == 0:
                 break
             for child_node in current_node.generate_child_nodes():
-                if pzl.convert_array2str(child_node.node) not in nodes.readlines():
+                node_repeated = False
+                for line in nodes.readlines():
+                    if pzl.convert_array2str(child_node.node) == line:
+                        node_repeated = True
+                        break
+                if not node_repeated:
                     child_node.weight = puzzle.get_final_weight(child_node.node, child_node.level)
                     puzzle.open_nodes.append(child_node)
-                else:
-                    print(child_node.node)
 
             puzzle.closed_nodes.append(current_node)
             del puzzle.open_nodes[0]
             puzzle.open_nodes.sort(key=lambda x: x.weight, reverse=False)
-            for node in puzzle.open_nodes:
-                nodes.write(pzl.convert_array2str(node.node))
-                nodes_info.write(str(node.index) + ' ' + str(node.parent_index) + ' 0\n')
 
         # Close all files
         node_path.close()
-        nodes.close()
         nodes_info.close()
