@@ -1,4 +1,5 @@
 import ast
+import numpy as np
 import puzzle as pzl
 from sys import argv
 from node import Node
@@ -6,6 +7,30 @@ from node import Node
 # Define arguments to run the code
 # start_config: start node for the puzzle
 script, start_config = argv
+
+
+def store_nodes_info(game):
+    # Open files to store information of nodes
+    nodes = open('output_files/Nodes.txt', 'w+')
+    nodes_info = open('output_files/NodesInfo.txt', 'w+')
+    # Store relevant open nodes information
+    for node in game.open_nodes:
+        nodes.write(pzl.convert_array2str(node.arr))
+        nodes_info.write(str(node.index) + ' ' + str(node.parent_index) + ' 0\n')
+    # Store relevant closed nodes information
+    for node in game.closed_nodes:
+        nodes.write(pzl.convert_array2str(node.arr))
+        nodes_info.write(str(node.index) + ' ' + str(node.parent_index) + ' 0\n')
+    # Close all files
+    nodes.close()
+    nodes_info.close()
+
+
+def get_path(game):
+    # Open files to store information of nodes
+    node_path = open('output_files/nodePath.txt', 'w+')
+    path_list = []
+    node = game.goal_node
 
 
 if __name__ == '__main__':
@@ -29,39 +54,32 @@ if __name__ == '__main__':
         print('UNSOLVABLE CONFIG PROVIDED')
     else:
         print('\n\nSolving...')
-        start_node = Node(puzzle.initial_node, puzzle.get_final_weight(puzzle.initial_node, 0), 0, 0, -1, 0)
+        start_node = Node(puzzle.initial_node, puzzle.get_final_weight(puzzle.initial_node, 0), 0, 0, -1, None)
         puzzle.open_nodes.append(start_node)
-        # Open various files
-        node_path = open('output_files/nodePath.txt', 'w+')
-        nodes = open('output_files/Nodes.txt', 'w+').close()
-        nodes_info = open('output_files/NodesInfo.txt', 'w+')
         while True:
             # Get current node
             current_node = puzzle.open_nodes[0]
-            # Add current node to node path
-            node_path.write(pzl.convert_array2str(current_node.node))
-            nodes = open('output_files/Nodes.txt', 'w')
-            for node in puzzle.open_nodes:
-                nodes.write(pzl.convert_array2str(node.node))
-                nodes_info.write(str(node.index) + ' ' + str(node.parent_index) + ' 0\n')
-            nodes.close()
-            nodes = open('output_files/Nodes.txt', 'r')
-            if puzzle.get_heuristic_value(current_node.node) == 0:
-                break
-            for child_node in current_node.generate_child_nodes():
-                node_repeated = False
-                for line in nodes.readlines():
-                    if pzl.convert_array2str(child_node.node) == line:
-                        node_repeated = True
-                        break
-                if not node_repeated:
-                    child_node.weight = puzzle.get_final_weight(child_node.node, child_node.level)
-                    puzzle.open_nodes.append(child_node)
-
+            # Add current node to closed nodes and delete it from open nodes
             puzzle.closed_nodes.append(current_node)
             del puzzle.open_nodes[0]
+            # Check if current node is goal node
+            if np.all(puzzle.goal_node == current_node.arr):
+                print('Done')
+                break
+            # Generate child nodes and iterate through them
+            for child_node in current_node.generate_child_nodes():
+                node_repeated = False
+                # Check for repetition of child node in closed nodes
+                for closed_node in puzzle.closed_nodes:
+                    if np.array_equal(closed_node.arr, child_node.arr):
+                        node_repeated = True
+                # Append child node to the list of open nodes
+                # Do no append child node if repeated
+                if not node_repeated:
+                    child_node.weight = puzzle.get_final_weight(child_node.arr, child_node.level)
+                    puzzle.open_nodes.append(child_node)
+            # Sort the open nodes using their weights
             puzzle.open_nodes.sort(key=lambda x: x.weight, reverse=False)
 
-        # Close all files
-        node_path.close()
-        nodes_info.close()
+        store_nodes_info(puzzle)
+        get_path(puzzle)
