@@ -1,19 +1,8 @@
 import numpy as np
 
 
-def get_reverse_action(action):
-    """
-    get action that regenerates parent node
-    :param action: action being taken on node
-    :return: action that can regenerate parent node
-    """
-    if action % 2 == 0:
-        return action + 1
-    return action - 1
-
-
 class Node:
-    def __init__(self, puzzle_node, node_weight, node_level, node_index, parent_node_index, reverse_action):
+    def __init__(self, puzzle_node, node_weight, node_level, node_index, parent_node_index, parent_node):
         """
         Initialize node class with start node and weight of the start node
         :param puzzle_node: 3x3 array of the current node
@@ -21,24 +10,24 @@ class Node:
         :param node_level: level of the node
         :param node_index: index of the node in search tree
         :param parent_node_index: index of the parent node in search tree
-        :param reverse_action: action that regenerates parent node
+        :param parent_node: store parent node for this node
         """
-        self.node = puzzle_node
+        self.arr = puzzle_node
         self.weight = node_weight
         self.level = node_level
         self.index = node_index
         self.parent_index = parent_node_index
-        self.reverse_action = reverse_action
+        self.parent_node = parent_node
 
     def generate_child_nodes(self):
         """
-        Generate child nodes from the current node
+        Generate child nodes of the current node
         :return: a list of all child nodes
         """
         # Define an empty list to store child nodes
         child_nodes = []
         # Get index of zero in the current node
-        index_zero = np.where(self.node == 0)
+        index_zero = np.where(self.arr == 0)
         x, y = index_zero[0][0], index_zero[1][0]
         # Define all the possible actions
         actions = [[x + 1, y],   # Right
@@ -47,14 +36,12 @@ class Node:
                    [x, y - 1]]  # Down
         # Perform each action on the current node to generate child node
         for i in range(len(actions)):
-            # Get child nodes for start node and for actions that could regenerate parent node
-            if self.parent_index == -1 or i != self.reverse_action:
-                child = self.get_child(self.node, x, y, actions[i][0], actions[i][1])
-                # Check if child node is generated
-                if child is not None and not np.array_equal(child, self.node):
-                    # Define all the properties of the child node and append to the child nodes' list
-                    child_node = Node(child, self.level + 1, 0, self.index + i + 1, self.index, get_reverse_action(i))
-                    child_nodes.append(child_node)
+            child = self.get_child(self.arr, x, y, actions[i][0], actions[i][1])
+            # Check if child node is generated
+            if child is not None and not np.array_equal(child, self.arr):
+                # Define all the properties of the child node and append to the child nodes' list
+                child_node = Node(child, self.level + 1, 0, self.index + i + 1, self.index, self.arr)
+                child_nodes.append(child_node)
 
         return child_nodes
 
@@ -69,7 +56,7 @@ class Node:
         :return: child node
         """
         # Check if new position of 0 are within the array
-        if 0 <= x2 < len(self.node) and 0 <= y2 < len(self.node):
+        if 0 <= x2 < len(self.arr) and 0 <= y2 < len(self.arr):
             # Make copy of the current node
             child_node = node.copy()
             # Shuffle array to update position 0 and get the child node
