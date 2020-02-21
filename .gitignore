@@ -130,3 +130,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Exclude readme file in text format
+readme.txt
+output_files/
