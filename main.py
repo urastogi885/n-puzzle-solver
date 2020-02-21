@@ -10,6 +10,11 @@ script, start_config = argv
 
 
 def store_nodes_info(game):
+    """
+    function to store information regarding all generated nodes
+    :param game: instance of puzzle class
+    :return: nothing
+    """
     # Open files to store information of nodes
     nodes = open('output_files/Nodes.txt', 'w+')
     nodes_info = open('output_files/NodesInfo.txt', 'w+')
@@ -26,11 +31,34 @@ def store_nodes_info(game):
     nodes_info.close()
 
 
-def get_path(game):
+def generate_path(game):
+    """
+    Generate path using backtracking
+    :param game: instance of puzzle class
+    :return: nothing
+    """
     # Open files to store information of nodes
     node_path = open('output_files/nodePath.txt', 'w+')
+    # Define empty list to store path nodes
+    # This list will be used to generate the node-path text file
     path_list = []
-    node = game.goal_node
+    # Get all data for goal node
+    closed_node = game.closed_nodes[-1]
+    # Append the matrix for goal node
+    path_list.append(closed_node.arr)
+    # Iterate until we reach the initial node
+    while not np.array_equal(closed_node.arr, game.initial_node):
+        # Search for parent node in the list of closed nodes
+        for node in game.closed_nodes:
+            if np.array_equal(node.arr, closed_node.parent_node):
+                # Append parent node
+                path_list.append(closed_node.parent_node)
+                # Update node to search for next parent
+                closed_node = node
+    # Iterate through the list in reverse order
+    # Add path nodes to the text file
+    for i in range(len(path_list) - 1, -1, -1):
+        node_path.write(pzl.convert_array2str(path_list[i]))
 
 
 if __name__ == '__main__':
@@ -57,7 +85,7 @@ if __name__ == '__main__':
         start_node = Node(puzzle.initial_node, puzzle.get_final_weight(puzzle.initial_node, 0), 0, 0, -1, None)
         puzzle.open_nodes.append(start_node)
         while True:
-            # Get current node
+            # Get the node with lowest weight
             current_node = puzzle.open_nodes[0]
             # Add current node to closed nodes and delete it from open nodes
             puzzle.closed_nodes.append(current_node)
@@ -80,6 +108,6 @@ if __name__ == '__main__':
                     puzzle.open_nodes.append(child_node)
             # Sort the open nodes using their weights
             puzzle.open_nodes.sort(key=lambda x: x.weight, reverse=False)
-
+        # Generate path and necessary text files
+        generate_path(puzzle)
         store_nodes_info(puzzle)
-        get_path(puzzle)
