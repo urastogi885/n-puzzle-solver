@@ -1,6 +1,7 @@
 import ast
 import puzzle as pzl
 from sys import argv
+from node import Node as node
 
 # Define arguments to run the code
 # start_config: start node for the puzzle
@@ -21,10 +22,12 @@ if __name__ == '__main__':
         quit()
     puzzle = pzl.Puzzle(start_node, goal_matrix)
     # Print the start config
-    print('Initial node:\n', puzzle.initial_puzzle)
-    print('Goal node:\n', puzzle.goal)
+    print('Initial node:\n', puzzle.initial_node)
+    print('Goal node:\n', puzzle.goal_node)
     # Check solvability of the initial node given by the user
     if not puzzle.check_solvability():
-        print('UNSOLVABLE CONFIG GIVEN')
+        print('UNSOLVABLE CONFIG PROVIDED')
     else:
-        print('Final weight for the node:', puzzle.get_final_weight(puzzle.initial_puzzle, 0))
+        start_node = node(puzzle.initial_node, puzzle.get_final_weight(puzzle.initial_node, 0), 0, 0, -1)
+        puzzle.open_nodes.append(start_node)
+        print(puzzle.open_nodes[0].parent_index)

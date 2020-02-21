@@ -28,9 +28,9 @@ class Node:
         index_zero = np.where(self.node == 0)
         x, y = index_zero[0][0], index_zero[1][0]
         # Define all the possible actions
-        actions = [[x + 1, y]   # Right
-                   [x - 1, y]   # Left
-                   [x, y + 1]   # Up
+        actions = [[x + 1, y],   # Right
+                   [x - 1, y],   # Left
+                   [x, y + 1],   # Up
                    [x, y - 1]]  # Down
         # Perform each action on the current node to generate child node
         for i in range(len(actions)):
