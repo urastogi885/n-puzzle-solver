@@ -1,7 +1,7 @@
 import ast
 import puzzle as pzl
 from sys import argv
-from node import Node as node
+from node import Node
 
 # Define arguments to run the code
 # start_config: start node for the puzzle
@@ -28,6 +28,35 @@ if __name__ == '__main__':
     if not puzzle.check_solvability():
         print('UNSOLVABLE CONFIG PROVIDED')
     else:
-        start_node = node(puzzle.initial_node, puzzle.get_final_weight(puzzle.initial_node, 0), 0, 0, -1)
+        print('\n\nSolving...\n\n')
+        start_node = Node(puzzle.initial_node, puzzle.get_final_weight(puzzle.initial_node, 0), 0, 0, -1)
         puzzle.open_nodes.append(start_node)
-        print(puzzle.open_nodes[0].parent_index)
+        # Open various files
+        node_path = open('output_files/nodePath.txt', 'w+')
+        nodes = open('output_files/Nodes.txt', 'w+')
+        nodes_info = open('output_files/NodesInfo.txt', 'w+')
+        while True:
+            # Get current node
+            current_node = puzzle.open_nodes[0]
+            # Add current node to node path
+            node_path.write(pzl.convert_array2str(current_node.node))
+            if puzzle.get_heuristic_value(current_node.node) == 0:
+                break
+            for child_node in current_node.generate_child_nodes():
+                if pzl.convert_array2str(child_node.node) not in nodes.readlines():
+                    child_node.weight = puzzle.get_final_weight(child_node.node, child_node.level)
+                    puzzle.open_nodes.append(child_node)
+                else:
+                    print(child_node.node)
+
+            puzzle.closed_nodes.append(current_node)
+            del puzzle.open_nodes[0]
+            puzzle.open_nodes.sort(key=lambda x: x.weight, reverse=False)
+            for node in puzzle.open_nodes:
+                nodes.write(pzl.convert_array2str(node.node))
+                nodes_info.write(str(node.index) + ' ' + str(node.parent_index) + ' 0\n')
+
+        # Close all files
+        node_path.close()
+        nodes.close()
+        nodes_info.close()
