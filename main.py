@@ -47,19 +47,20 @@ def generate_path(game):
     # Append the matrix for goal node
     path_list.append(closed_node.arr)
     # Iterate until we reach the initial node
-    while not np.array_equal(closed_node.arr, game.initial_node):
+    while not np.all(closed_node.arr == game.initial_node):
         # Search for parent node in the list of closed nodes
         for node in game.closed_nodes:
-            if np.array_equal(node.arr, closed_node.parent_node):
+            if np.all(node.arr == closed_node.parent_node):
                 # Append parent node
-                print('Weight:', closed_node.weight, closed_node.level)
+                # print('Weight:', closed_node.weight, closed_node.level)
                 path_list.append(closed_node.parent_node)
                 # Update node to search for next parent
                 closed_node = node
+                break
     # Iterate through the list in reverse order
     # Add path nodes to the text file
-    for i in range(len(path_list) - 1, -1, -1):
-        node_path.write(pzl.convert_array2str(path_list[i]))
+    for j in range(len(path_list) - 1, -1, -1):
+        node_path.write(pzl.convert_array2str(path_list[j]))
 
 
 if __name__ == '__main__':
@@ -87,6 +88,8 @@ if __name__ == '__main__':
         puzzle.open_nodes.append(start_node)
         while True:
             # Get the node with lowest weight
+            if len(puzzle.open_nodes) == 0:
+                break
             current_node = puzzle.open_nodes[0]
             # Add current node to closed nodes and delete it from open nodes
             puzzle.closed_nodes.append(current_node)
@@ -98,19 +101,28 @@ if __name__ == '__main__':
             # Generate child nodes and iterate through them
             for child_node in current_node.generate_child_nodes():
                 node_repeated = False
+                # Update final weight of the child node
+                child_node.weight = puzzle.get_final_weight(child_node.arr, child_node.level)
                 # Check for repetition of child node in closed nodes
                 for closed_node in puzzle.closed_nodes:
-                    if np.array_equal(closed_node.arr, child_node.arr):
+                    if np.all(closed_node.arr == child_node.arr):
                         node_repeated = True
+                        break
+                # Check for repetition of child node in open nodes
+                for i in range(len(puzzle.open_nodes)):
+                    if np.all(puzzle.open_nodes[i].arr == child_node.arr):
+                        if puzzle.open_nodes[i].weight > child_node.weight:
+                            puzzle.open_nodes[i] = child_node
+                        node_repeated = True
+                        break
                 # Append child node to the list of open nodes
                 # Do no append child node if repeated
                 if not node_repeated:
-                    # Update final weight of the child node
-                    child_node.weight = puzzle.get_final_weight(child_node.arr, child_node.level)
                     # print('Node Weight:', child_node.weight)
                     puzzle.open_nodes.append(child_node)
             # Sort the open nodes using their weights
             puzzle.open_nodes.sort(key=lambda x: x.weight, reverse=False)
+
         # Generate path and necessary text files
         generate_path(puzzle)
         store_nodes_info(puzzle)
