@@ -17,10 +17,14 @@ def convert_array2str(arr):
     :return: string with elements separated by spaces
     """
     string = ''
-    for x in np.nditer(arr):
-        string += str(x) + ' '
+    # Get length of array
+    arr_size = len(arr)
+    # Iterate over the array to generate string with columns first
+    for i in range(arr_size):
+        for j in range(arr_size):
+            string += str(arr[j][i]) + ' '
 
-    # Remove the last unnecessary space
+    # Remove the last unnecessary space and add new line character
     return string[0:len(string) - 1] + '\n'
 
 
@@ -68,11 +72,6 @@ class Puzzle:
         :return: manhattan distance
         """
         manhattan_distance = 0
-
-        # for i in range(0, 3):
-        #     for j in range(0, 3):
-        #         if node[i][j] != self.goal_node[i][j] and node[i][j] != 0:
-        #             manhattan_distance += 1
 
         for x in np.nditer(self.goal_node):
             # Do not evaluate manhattan distance for 0
