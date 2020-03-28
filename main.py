@@ -3,6 +3,7 @@ import numpy as np
 import puzzle as pzl
 from sys import argv
 from node import Node
+from time import time
 
 # Define arguments to run the code
 # start_config: start node for the puzzle
@@ -18,14 +19,10 @@ def store_nodes_info(game):
     # Open files to store information of nodes
     nodes = open('output_files/Nodes.txt', 'w+')
     nodes_info = open('output_files/NodesInfo.txt', 'w+')
-    # Store relevant open nodes information
-    for node in game.open_nodes:
-        nodes.write(pzl.convert_array2str(node.arr))
-        nodes_info.write(str(node.index) + ' ' + str(node.parent_index) + ' 0\n')
-    # Store relevant closed nodes information
-    for node in game.closed_nodes:
-        nodes.write(pzl.convert_array2str(node.arr))
-        nodes_info.write(str(node.index) + ' ' + str(node.parent_index) + ' 0\n')
+    # Store relevant information of all generated nodes
+    for generated_node in game.generated_nodes:
+        nodes.write(pzl.convert_array2str(generated_node.arr))
+        nodes_info.write(str(generated_node.index) + ' ' + str(generated_node.parent_index) + ' 0\n')
     # Close all files
     nodes.close()
     nodes_info.close()
@@ -83,20 +80,21 @@ if __name__ == '__main__':
     if not puzzle.check_solvability():
         print('UNSOLVABLE CONFIG PROVIDED')
     else:
-        print('\n\nSolving...')
+        # Define start node
         start_node = Node(puzzle.initial_node, puzzle.get_final_weight(puzzle.initial_node, 0), 0, 0, -1, None)
+        # Store start node in open and generated nodes list
         puzzle.open_nodes.append(start_node)
-        while True:
+        puzzle.generated_nodes.append(start_node)
+        # Store start time for exploration
+        start_time = time()
+        # Start exploration to find goal node
+        while len(puzzle.open_nodes):
             # Get the node with lowest weight
-            if len(puzzle.open_nodes) == 0:
-                break
-            current_node = puzzle.open_nodes[0]
+            current_node = puzzle.open_nodes.pop()
             # Add current node to closed nodes and delete it from open nodes
             puzzle.closed_nodes.append(current_node)
-            del puzzle.open_nodes[0]
             # Check if current node is goal node
             if np.all(puzzle.goal_node == current_node.arr):
-                print('Done')
                 break
             # Generate child nodes and iterate through them
             for child_node in current_node.generate_child_nodes():
@@ -104,25 +102,20 @@ if __name__ == '__main__':
                 # Update final weight of the child node
                 child_node.weight = puzzle.get_final_weight(child_node.arr, child_node.level)
                 # Check for repetition of child node in closed nodes
-                for closed_node in puzzle.closed_nodes:
-                    if np.all(closed_node.arr == child_node.arr):
-                        node_repeated = True
-                        break
-                # Check for repetition of child node in open nodes
-                for i in range(len(puzzle.open_nodes)):
-                    if np.all(puzzle.open_nodes[i].arr == child_node.arr):
-                        if puzzle.open_nodes[i].weight > child_node.weight:
-                            puzzle.open_nodes[i] = child_node
+                for node in puzzle.closed_nodes:
+                    if np.all(node.arr == child_node.arr):
                         node_repeated = True
                         break
                 # Append child node to the list of open nodes
                 # Do no append child node if repeated
                 if not node_repeated:
-                    # print('Node Weight:', child_node.weight)
                     puzzle.open_nodes.append(child_node)
+                    puzzle.generated_nodes.append(child_node)
             # Sort the open nodes using their weights
-            puzzle.open_nodes.sort(key=lambda x: x.weight, reverse=False)
-
+            puzzle.open_nodes.sort(key=lambda x: x.weight, reverse=True)
+        # Display exploration time on console/terminal window
+        print('Exploration time:', time() - start_time)
         # Generate path and necessary text files
         generate_path(puzzle)
         store_nodes_info(puzzle)
+        print('Check moves to reach goal in output_files/nodePath.txt')
