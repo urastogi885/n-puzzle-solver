@@ -39,9 +39,10 @@ class Puzzle:
         self.initial_list = initial_list
         self.initial_node = convert_into_matrix(self.initial_list)
         self.goal_node = goal_node
-        # Define empty lists to store open and closed nodes
+        # Define empty lists to store open, closed nodes, and generated nodes
         self.open_nodes = []
         self.closed_nodes = []
+        self.generated_nodes = []
 
     def check_solvability(self):
         """
