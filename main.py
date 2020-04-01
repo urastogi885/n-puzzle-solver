@@ -8,58 +8,8 @@ from utils import puzzle as pzl
 from utils.node import Node
 
 # Define arguments to run the code
-# start_config: start node for the puzzle
+# start_config: a list of numbers representing the start node for the puzzle
 script, start_config = argv
-
-
-def store_nodes_info(game):
-    """
-    function to store information regarding all generated nodes
-    :param game: instance of puzzle class
-    :return: nothing
-    """
-    # Open files to store information of nodes
-    nodes = open('output_files/Nodes.txt', 'w+')
-    nodes_info = open('output_files/NodesInfo.txt', 'w+')
-    # Store relevant information of all generated nodes
-    for generated_node in game.generated_nodes:
-        nodes.write(pzl.convert_array2str(generated_node.arr))
-        nodes_info.write(str(generated_node.index) + ' ' + str(generated_node.parent_index) + ' 0\n')
-    # Close all files
-    nodes.close()
-    nodes_info.close()
-
-
-def generate_path(game):
-    """
-    Generate path using backtracking
-    :param game: instance of puzzle class
-    :return: nothing
-    """
-    # Open files to store information of nodes
-    node_path = open('output_files/nodePath.txt', 'w+')
-    # Define empty list to store path nodes
-    # This list will be used to generate the node-path text file
-    path_list = []
-    # Get all data for goal node
-    closed_node = game.closed_nodes[-1]
-    # Append the matrix for goal node
-    path_list.append(closed_node.arr)
-    # Iterate until we reach the initial node
-    while not np.all(closed_node.arr == game.initial_node):
-        # Search for parent node in the list of closed nodes
-        for node in game.closed_nodes:
-            if np.all(node.arr == closed_node.parent_node):
-                # Append parent node
-                # print('Weight:', closed_node.weight, closed_node.level)
-                path_list.append(closed_node.parent_node)
-                # Update node to search for next parent
-                closed_node = node
-                break
-    # Iterate through the list in reverse order
-    # Add path nodes to the text file
-    for j in range(len(path_list) - 1, -1, -1):
-        node_path.write(pzl.convert_array2str(path_list[j]))
 
 
 if __name__ == '__main__':
@@ -118,6 +68,6 @@ if __name__ == '__main__':
         # Display exploration time on console/terminal window
         print('Exploration time:', time() - start_time)
         # Generate path and necessary text files
-        generate_path(puzzle)
-        store_nodes_info(puzzle)
+        puzzle.generate_path()
+        puzzle.store_nodes_info()
         print('Check moves to reach goal in output_files/nodePath.txt')
