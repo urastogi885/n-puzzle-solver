@@ -10,6 +10,11 @@ given configuration is solvable.
 
 Note that the bank tile is denoted by 0.
 
+## Todo
+
+- Update code to solve an N-puzzle problem
+- Add animation to show an automated solution
+
 ## Dependencies
 
 - Python3
