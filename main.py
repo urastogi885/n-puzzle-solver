@@ -1,9 +1,11 @@
+# Import necessary standard libraries
 import ast
 import numpy as np
-import puzzle as pzl
 from sys import argv
-from node import Node
 from time import time
+# Import custom-built classes
+from utils import puzzle as pzl
+from utils.node import Node
 
 # Define arguments to run the code
 # start_config: start node for the puzzle
