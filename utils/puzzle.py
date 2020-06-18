@@ -1,19 +1,30 @@
 import numpy as np
 
 
-def convert_into_matrix(convert_list):
+def convert_into_matrix(convert_list: list) -> np.ndarray:
     """
     Convert a list into a 3x3 numpy array
     :param convert_list: list to be converted into matrix
-    :return: 3x3 numpy array
+    :return: a square numpy array
     """
     return np.array(convert_list).reshape(3, 3)
 
 
-def convert_array2str(arr):
+def get_goal_matrix(size: int) -> np.ndarray:
+    """
+    Using the size of the puzzle, generate goal matrix
+    :param size: an integer indicating size of puzzle
+    :return: a square numpy array
+    """
+    goal_list = [i for i in range(1, size)]
+    goal_list.append(0)
+    return convert_into_matrix(goal_list)
+
+
+def convert_array2str(arr: np.ndarray) -> str:
     """
     Convert a numpy array into a string with the array's elements separated by spaces
-    :param arr: numpy n-D array
+    :param arr: a numpy N-D array
     :return: string with elements separated by spaces
     """
     string = ''
