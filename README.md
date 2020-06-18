@@ -1,6 +1,6 @@
-# 8-Puzzle Problem Solver
-[![Build Status](https://travis-ci.org/urastogi885/8-puzzle-problem.svg?branch=master)](https://travis-ci.org/urastogi885/8-puzzle-problem)
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://github.com/urastogi885/8-puzzle-problem/blob/master/LICENSE)
+# 8-Puzzle Solver
+[![Build Status](https://travis-ci.org/urastogi885/8-puzzle-solver.svg?branch=master)](https://travis-ci.org/urastogi885/8-puzzle-solver)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://github.com/urastogi885/8-puzzle-solver/blob/master/LICENSE)
 
 ## Overview
 
@@ -46,7 +46,7 @@ import numpy as np
 - Using the terminal, clone this repository, go into the project directory, and run the main program:
 
 ````
-git clone https://github.com/urastogi885/8-puzzle-problem
+git clone https://github.com/urastogi885/8-puzzle-solver
 cd 8-puzzle-problem
 python3 main.py 8,6,7,2,5,4,3,0,1
 ````
