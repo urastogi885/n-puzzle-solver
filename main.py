@@ -8,19 +8,18 @@ from utils import puzzle as pzl
 from utils.node import Node
 
 # Define arguments to run the code
+# puzzle_size: an integer indicating which n-puzzle-problem to solve for such as 3, 8, 15
 # start_config: a list of numbers representing the start node for the puzzle
-script, start_config = argv
+script, puzzle_size, start_config = argv
 
 
 if __name__ == '__main__':
-    # Define goal puzzle as list
-    goal_list = [1, 2, 3, 4, 5, 6, 7, 8, 0]
-    # Convert goal into matrix
-    goal_matrix = pzl.convert_into_matrix(goal_list)
+    # Get goal matrix
+    goal_matrix = pzl.get_goal_matrix(int(puzzle_size) + 1)
     # Get start config and convert it into a matrix
     start_node = ast.literal_eval(start_config)
     # Check if correct no. of elements have been given for the puzzle
-    if len(start_node) != 9:
+    if len(start_node) != int(puzzle_size) + 1:
         print('You entered', len(start_node), 'elements for the puzzle!')
         print('Please enter exactly 9 elements each separated by a comma')
         quit()
