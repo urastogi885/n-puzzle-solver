@@ -7,7 +7,8 @@ def convert_into_matrix(convert_list: list) -> np.ndarray:
     :param convert_list: list to be converted into matrix
     :return: a square numpy array
     """
-    return np.array(convert_list).reshape(3, 3)
+    size = int(np.sqrt(len(convert_list)))
+    return np.array(convert_list).reshape(size, size)
 
 
 def get_goal_matrix(size: int) -> np.ndarray:
