@@ -49,6 +49,7 @@ class Puzzle:
         """
         # Store puzzle and goal nodes as class members
         self.initial_list = initial_list
+        self.puzzle_length = len(self.initial_list) - 1
         self.initial_node = convert_into_matrix(self.initial_list)
         self.goal_node = goal_node
         # Define empty lists to store open, closed nodes, and generated nodes
@@ -63,20 +64,28 @@ class Puzzle:
         """
         inversions = 0
         # Iterate through the start node to determine no. of inversions needed
-        for i in range(len(self.initial_list) - 1):
+        for i in range(self.puzzle_length):
             # Check for incorrect elements in the start node
             if self.initial_list[i] not in self.goal_node:
                 print('Incorrect elements in the start node')
                 return False
             for j in range(i + 1, len(self.initial_list)):
                 # Ignore 0 while calculating inversions
-                if self.initial_list[j] and self.initial_list[i] and self.initial_list[j] > self.initial_list[i]:
+                if self.initial_list[j] and self.initial_list[i] and self.initial_list[i] > self.initial_list[j]:
                     inversions += 1
-        # If no. of inversions are even, puzzle is solvable
-        if inversions % 2 != 0:
-            return False
+        # If puzzle length is even and no. of inversions are even, puzzle is solvable
+        if self.puzzle_length % 2 == 0:
+            if inversions % 2 == 0:
+                return True
+        # If puzzle length is odd
+        else:
+            zero_pos = len(self.initial_node) - int(np.where(self.initial_node == 0)[0])
+            if zero_pos % 2 == 0 and inversions % 2 != 0:
+                return True
+            elif zero_pos % 2 != 0 and inversions % 2 == 0:
+                return True
 
-        return True
+        return False
 
     def get_heuristic_score(self, node):
         """
