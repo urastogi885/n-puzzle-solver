@@ -21,7 +21,7 @@ if __name__ == '__main__':
     # Check if correct no. of elements have been given for the puzzle
     if len(start_node) != int(puzzle_size) + 1:
         print('You entered', len(start_node), 'elements for the puzzle!')
-        print('Please enter exactly 9 elements each separated by a comma')
+        print('Please enter exactly ' + str(int(puzzle_size) + 1) + ' elements each separated by a comma')
         quit()
     puzzle = pzl.Puzzle(start_node, goal_matrix)
     # Print the start config
