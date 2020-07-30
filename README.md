@@ -1,14 +1,14 @@
-# 8-Puzzle Solver
-[![Build Status](https://travis-ci.org/urastogi885/8-puzzle-solver.svg?branch=master)](https://travis-ci.org/urastogi885/8-puzzle-solver)
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://github.com/urastogi885/8-puzzle-solver/blob/master/LICENSE)
+# N-Puzzle Solver
+[![Build Status](https://travis-ci.org/urastogi885/n-puzzle-solver.svg?branch=master)](https://travis-ci.org/urastogi885/n-puzzle-solver)
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://github.com/urastogi885/n-puzzle-solver/blob/master/LICENSE)
 
 ## Overview
 
-This project implements a solver for the 8-puzzle problem. The goal is to find the minimum number of steps to reach the
-final goal of [[1 2 3], [4 5 6], [7 8 0]] from an initial configuration provided by the user. It also checks whether the
+This project implements a solver for the N-puzzle problem. The goal is to find the minimum number of steps to reach the
+final goal of [[1 2 3], [4 5 6], [7 8 0]] from an initial configuration provided by the user if N=8. It also checks whether the
 given configuration is solvable.
 
-Note that the bank tile is denoted by 0.
+Note that the blank tile is denoted by 0.
 
 ## Todo
 
@@ -46,9 +46,10 @@ import numpy as np
 - Using the terminal, clone this repository, go into the project directory, and run the main program:
 
 ````
-git clone https://github.com/urastogi885/8-puzzle-solver
+git clone https://github.com/urastogi885/n-puzzle-solver
 cd 8-puzzle-problem
-python3 main.py 8,6,7,2,5,4,3,0,1
+python3 main.py N initial_config
+python3 main.py 8 8,6,7,2,5,4,3,0,1
 ````
 
 - The program will take about 2.5 minutes for the above case. This is one of the most difficult cases for the 8-puzzle
