@@ -137,7 +137,6 @@ class Puzzle:
             for node in self.closed_nodes:
                 if np.all(node.arr == closed_node.parent_node):
                     # Append parent node
-                    # print('Weight:', closed_node.weight, closed_node.level)
                     path_list.append(closed_node.parent_node)
                     # Update node to search for next parent
                     closed_node = node
