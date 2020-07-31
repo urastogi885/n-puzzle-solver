@@ -41,6 +41,10 @@ def convert_array2str(arr: np.ndarray) -> str:
 
 
 class Puzzle:
+    """
+    A class to solve given N-puzzle
+    """
+
     def __init__(self, initial_list, goal_node):
         """
         Initialize the puzzle with a start node and final goal node
@@ -57,7 +61,7 @@ class Puzzle:
         self.closed_nodes = []
         self.generated_nodes = []
 
-    def check_solvability(self):
+    def check_solvability(self) -> bool:
         """
         Check the solvability of the given puzzle config
         :return: Whether the puzzle is solvable
@@ -87,7 +91,7 @@ class Puzzle:
 
         return False
 
-    def get_heuristic_score(self, node):
+    def get_heuristic_score(self, node: np.ndarray) -> int:
         """
         Implement heuristic function for a-star by calculating manhattan distance
         :param: node: current puzzle node under consideration
@@ -107,7 +111,7 @@ class Puzzle:
 
         return manhattan_distance
 
-    def get_final_weight(self, node, node_level):
+    def get_final_weight(self, node: np.ndarray, node_level: int) -> int:
         """
         Get final weight for a-star
         :param node: 3x3 array of the node
@@ -117,7 +121,7 @@ class Puzzle:
         # Add heuristic value and node level to get the final weight for the current node
         return self.get_heuristic_score(node) + node_level
 
-    def generate_path(self):
+    def generate_path(self) -> None:
         """
         Generate path using backtracking and store it column-wise in a text file
         :return: nothing
@@ -146,7 +150,7 @@ class Puzzle:
         for j in range(len(path_list) - 1, -1, -1):
             node_path.write(convert_array2str(path_list[j]))
 
-    def store_nodes_info(self):
+    def store_nodes_info(self) -> None:
         """
         function to store information regarding all generated nodes
         :return: nothing
