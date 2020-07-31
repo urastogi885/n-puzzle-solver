@@ -45,7 +45,7 @@ class Puzzle:
     A class to solve given N-puzzle
     """
 
-    def __init__(self, initial_list, goal_node):
+    def __init__(self, initial_list: list, goal_node: np.ndarray):
         """
         Initialize the puzzle with a start node and final goal node
         :param initial_list: start node provided by the user
