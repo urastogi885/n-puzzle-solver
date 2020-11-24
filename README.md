@@ -1,6 +1,6 @@
 # N-Puzzle Solver
 [![Build Status](https://travis-ci.org/urastogi885/n-puzzle-solver.svg?branch=master)](https://travis-ci.org/urastogi885/n-puzzle-solver)
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://github.com/urastogi885/n-puzzle-solver/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/urastogi885/n-puzzle-solver/blob/master/LICENSE)
 
 ## Overview
 
